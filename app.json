@@ -1,8 +1,14 @@
 {
   "expo": {
-    "name": "infantil-play-tube",
+    "name": "Infantil Play Tube",
     "slug": "infantil-play-tube",
     "version": "1.0.0",
+    "scheme": "infantil-play-tube",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,10 +25,37 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.robsonmagalhaes.infantilplaytube"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-1411733442258523~8868935848",
+          "iosAppId": "ca-app-pub-1411733442258523~8868935848"
+        }
+      ],
+      "expo-font"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7796b637-d158-4794-85ac-031095905595"
+      }
     }
   }
 }
