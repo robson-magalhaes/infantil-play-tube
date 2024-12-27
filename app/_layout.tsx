@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import mobileAds, { MaxAdContentRating } from 'react-native-google-mobile-ads';
 import { ContextProvider } from '../context/MainContext';
+
 export default function Layout() {
 
   useEffect(() => {
@@ -13,7 +14,6 @@ export default function Layout() {
         tagForUnderAgeOfConsent: true,
         testDeviceIdentifiers: ['EMULATOR'],
       }).then(() => {
-        console.log('Ad request config successfully set!');
       });
 
     mobileAds()
@@ -22,6 +22,7 @@ export default function Layout() {
         console.log(adapterStatuses);
       });
   }, []);
+
   return (
     <ContextProvider>
       <Stack>

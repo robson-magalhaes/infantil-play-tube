@@ -1,7 +1,10 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
+import useOpenAds from '../../services/useOpenAds';
 
 export default () => {
+  useOpenAds();
+
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: '#4fc4d6' }}>
       <Tabs.Screen
@@ -15,7 +18,7 @@ export default () => {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Settings',
+          title: 'Configurações',
           headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
         }}

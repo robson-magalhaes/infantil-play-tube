@@ -1,4 +1,5 @@
-type CategoryType = {
+type DataType = {
+    id?: number,
     nameCategory: string,
     data: {}
 }
