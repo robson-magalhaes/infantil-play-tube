@@ -14,7 +14,7 @@ export default ({ load, setLoad, setBlockView }: Props) => {
   const [pass, setPass] = useState<string>('')
 
   const handleAuth = () => {
-    if (pass === ParentalControl?.passParental) {
+    if (pass == ParentalControl?.passParental) {
       alert('SUCESSO!! Tela desbloqueada')
       setBlockView(false);
       setLoad(false);

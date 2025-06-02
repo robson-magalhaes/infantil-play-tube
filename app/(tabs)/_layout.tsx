@@ -21,6 +21,7 @@ export default () => {
         tabBarActiveTintColor: '#4fc4d6',
         tabBarInactiveTintColor: '#706363',
         tabBarStyle: {
+          height:35
         },
         }}>
         <Tabs.Screen
@@ -28,7 +29,7 @@ export default () => {
           options={{
             title: 'Início',
             headerShown: false,
-            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="home" color={focused ? '#4fc4d6' : '#c829f0'} />,
+            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="home" color={focused ? '#4fc4d6' : '#0652df'} />,
           }}
         />
         <Tabs.Screen
@@ -40,13 +41,29 @@ export default () => {
           }}
         />
         <Tabs.Screen
+          name="categorias"
+          options={{
+            title: 'Categorias',
+            headerShown: false,
+            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="home" color={focused ? '#4fc4d6' : '#b829f0'} />,
+          }}
+        />
+        <Tabs.Screen
+          name="parentalControl"
+          options={{
+            title: 'Bloquear/Desbloquear',
+            headerShown: false,
+            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="cog" color={focused ? '#4fc4d6' : '#ffb95e'} />,
+          }}
+        /> 
+        {/* <Tabs.Screen
           name="settings"
           options={{
             title: 'Configurações',
             headerShown: false,
-            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="cog" color={focused ? '#4fc4d6' : '#fffc5e'} />,
+            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="cog" color={focused ? '#4fc4d6' : '#ffb95e'} />,
           }}
-        />
+        /> */}
       </Tabs>
 
       {isButtonPressed ?
@@ -83,8 +100,8 @@ const styles = StyleSheet.create({
   },
   btnBlock: {
     position: "absolute",
-    bottom: 7,
-    right: 35,
+    bottom: 15,
+    right: 17,
     width: 40,
     height: 40,
     backgroundColor: '#fff',

@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getVideosForCategory } from '../../services/fetchData';
 import useAdsIntertistial from '../../services/useAdsIntertistial';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { ParentalContext } from '../../context/ParentalControlContext';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '../../types/RootStackParamList';
 import AnimatedAndHappy from '../../components/AnimatedAndHappy';
@@ -14,7 +13,6 @@ import AnimatedAndHappy from '../../components/AnimatedAndHappy';
 export default () => {
   useAdsIntertistial();
   const Ctx = useContext(MainContext);
-  const ParentalControl = useContext(ParentalContext);
   const navigation = useNavigation<RootStackParamList>();
   const handleUpdate = async () => {
     try {
@@ -72,12 +70,11 @@ export default () => {
       <GAMBannerAdsComponent bannerId='ca-app-pub-1411733442258523/8794582523' />
 
       <View style={styles.container}>
-        <Text style={styles.title}>Configurações</Text>
+        <Text style={styles.title}>Categorias</Text>
         <Text style={styles.simpleText}>
-          Alteração de categorias da tela inicial e bloqueio de tela.
+          Alteração de categorias da tela inicial.
         </Text>
         <View style={styles.cardSession}>
-          <Text style={[styles.title, { fontSize: 25 }]}>Categorias</Text>
           {Ctx?.data.map((item) => (
             <View key={item.id} style={styles.InputItems}>
               <TextInput
@@ -97,22 +94,6 @@ export default () => {
             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>ADICIONAR</Text>
           </Pressable>
         </View>
-
-
-        <View style={styles.cardSession}>
-          <Text style={styles.title}>Controle dos Pais</Text>
-          <View style={[styles.InputItems, { flexDirection: 'row' }]}>
-            <Text style={[styles.simpleText, { marginVertical: 'auto' }]}>Senha:</Text>
-            <TextInput
-              keyboardType='number-pad'
-              style={[styles.input, { width: 300, marginLeft: 10 }]}
-              value={ParentalControl?.passParental}
-              placeholder='Digite aqui a senha...'
-              onChangeText={(newText) => ParentalControl?.setPassParental(newText)}
-            />
-          </View>
-        </View>
-
         <Pressable style={styles.btnSave} onPress={handleUpdate}>
           <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>SALVAR</Text>
         </Pressable>
@@ -128,7 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     textAlign: "center",
-    paddingVertical: 50,
+    paddingVertical: 30,
     backgroundColor: 'transparent',
   },
   title: {
@@ -157,7 +138,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignContent: "center",
-    width: '70%',
+    width: '60%',
     marginHorizontal: 'auto',
     boxShadow: "1 1 1 1 #00000050",
   },
@@ -169,7 +150,7 @@ const styles = StyleSheet.create({
   },
   InputItems: {
     width: "100%",
-    maxWidth: 500,
+    maxWidth: 400,
     justifyContent: "center",
     marginVertical: 10,
     marginHorizontal: 'auto',
