@@ -6,6 +6,7 @@ type Props = {
 }
 export default ({ bannerId }: Props) => {
     const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : bannerId;
+    //const adUnitId = bannerId;
     return (
         <BannerAd
             unitId={adUnitId}

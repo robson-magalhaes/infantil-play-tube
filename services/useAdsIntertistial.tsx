@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Platform, StatusBar } from 'react-native';
 import { InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
 
-const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-3940256099942544/1033173712';
+const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-1411733442258523/9244511809';
+
+//const adUnitId = 'ca-app-pub-1411733442258523/9244511809';
 
 const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
     keywords: ['fashion', 'clothing'],

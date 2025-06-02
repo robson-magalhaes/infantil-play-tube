@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Pressable, Button, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, Button, FlatList, Dimensions, ScrollView } from 'react-native';
 import GAMBannerAdsComponent from '../../components/GAMBannerAdsComponent';
 import { useContext } from 'react';
 import { MainContext } from '../../context/MainContext';
@@ -6,11 +6,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getVideosForCategory } from '../../services/fetchData';
 import useAdsIntertistial from '../../services/useAdsIntertistial';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { ParentalContext } from '../../context/ParentalControlContext';
+import { useNavigation } from 'expo-router';
+import { RootStackParamList } from '../../types/RootStackParamList';
+import AnimatedAndHappy from '../../components/AnimatedAndHappy';
+
 export default () => {
   useAdsIntertistial();
-
   const Ctx = useContext(MainContext);
-
+  const ParentalControl = useContext(ParentalContext);
+  const navigation = useNavigation<RootStackParamList>();
   const handleUpdate = async () => {
     try {
       if (Ctx?.data) {
@@ -20,6 +25,7 @@ export default () => {
         alert('Dados atualizados com sucesso!');
         getVideosForCategory(Ctx.data).then((videos) => {
           Ctx.setVideos(videos);
+          navigation.navigate('index');
         });
       }
     } catch (error) {
@@ -59,16 +65,21 @@ export default () => {
     }
   }
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Configurações</Text>
+    <ScrollView contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}>
+      <AnimatedAndHappy />
+      
+      {/* ANUNCIO AQUI*/}
+      <GAMBannerAdsComponent bannerId='ca-app-pub-1411733442258523/8794582523' />
 
-      <View style={styles.formContainer}>
-        <Text>Adicione aqui a categoria que vai aparecer na tela inicial</Text>
-        <FlatList
-          data={Ctx?.data}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.InputItems}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Configurações</Text>
+        <Text style={styles.simpleText}>
+          Alteração de categorias da tela inicial e bloqueio de tela.
+        </Text>
+        <View style={styles.cardSession}>
+          <Text style={[styles.title, { fontSize: 25 }]}>Categorias</Text>
+          {Ctx?.data.map((item) => (
+            <View key={item.id} style={styles.InputItems}>
               <TextInput
                 value={item.name}
                 style={styles.input}
@@ -77,83 +88,124 @@ export default () => {
               <Pressable
                 onPress={() => handleInputDel(item.id)}
                 style={styles.btnInput}>
-                <View><FontAwesome size={25} name="trash" color={"#FFFFFF"} style={{ alignSelf: "center", verticalAlign: "middle" }} /></View>
+                <FontAwesome size={25} name="trash" color={"#FFFFFF"} />
               </Pressable>
             </View>
-          )}
-        />
+          ))}
+          <Text style={{ fontWeight: 'bold', textAlign: 'right', marginRight: 50 }}>Máximo de categorias: {Ctx?.data.length} / 5</Text>
+          <Pressable style={[styles.btnSave, { backgroundColor: '#1290e4' }]} onPress={setCategory}>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>ADICIONAR</Text>
+          </Pressable>
+        </View>
 
-        <Text>Máximo de categorias: {Ctx?.data.length} / 5</Text>
-        <Pressable style={{ marginTop: 20 }}>
-          <Button onPress={setCategory} title="Adicionar" />
+
+        <View style={styles.cardSession}>
+          <Text style={styles.title}>Controle dos Pais</Text>
+          <View style={[styles.InputItems, { flexDirection: 'row' }]}>
+            <Text style={[styles.simpleText, { marginVertical: 'auto' }]}>Senha:</Text>
+            <TextInput
+              keyboardType='number-pad'
+              style={[styles.input, { width: 300, marginLeft: 10 }]}
+              value={ParentalControl?.passParental}
+              placeholder='Digite aqui a senha...'
+              onChangeText={(newText) => ParentalControl?.setPassParental(newText)}
+            />
+          </View>
+        </View>
+
+        <Pressable style={styles.btnSave} onPress={handleUpdate}>
+          <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>SALVAR</Text>
         </Pressable>
       </View>
-
-      <Pressable style={styles.btnSave} onPress={handleUpdate}>
-        <Text style={styles.saveText}>SALVAR</Text>
-      </Pressable>
-
-      <GAMBannerAdsComponent bannerId={'ca-app-pub-3940256099942544/9214589741'} />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     width: "100%",
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
+    height: "auto",
+    justifyContent: "center",
+    alignContent: "center",
+    textAlign: "center",
+    paddingVertical: 50,
+    backgroundColor: 'transparent',
   },
   title: {
     textAlign: "center",
     fontSize: 30,
-    marginTop: 50,
+    fontWeight: 'bold',
+    color: '#fff',
+    textShadowColor: 'blue',
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 1
+  },
+  simpleText: {
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    textShadowColor: 'blue',
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 1
+  },
+  cardSession: {
+    padding: 25,
+    marginVertical: 20,
+    borderRadius: 10,
+    backgroundColor: '#ffffff80',
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: "center",
+    width: '70%',
+    marginHorizontal: 'auto',
+    boxShadow: "1 1 1 1 #00000050",
   },
   formContainer: {
-    flex: 1,
-    padding: 20,
-    width: "100%"
+    padding: 10,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: "flex-start"
+  },
+  InputItems: {
+    width: "100%",
+    maxWidth: 500,
+    justifyContent: "center",
+    marginVertical: 10,
+    marginHorizontal: 'auto',
+    flexDirection: "row",
   },
   input: {
-    width: "80%",
-    height: 40,
-    padding: 10,
+    width: '100%',
+    height: 50,
+    paddingLeft: 15,
     borderRadius: 7,
     borderColor: '#2196F3',
     borderWidth: 2,
     fontSize: 18,
-    boxShadow: "inset 0 0 2 1 pink, 2 2 1 1 yellow",
-  },
-  InputItems: {
-    marginTop: 20,
-    width: "100%",
-    flexDirection: "row",
+    fontWeight: 'bold',
+    boxShadow: "inset 0 0 2 1 pink, 2 2 1 1 yellow"
   },
   btnInput: {
+    width: 35,
+    height: 35,
     backgroundColor: "red",
-    height: "auto",
     marginLeft: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    marginVertical: 'auto',
     borderRadius: 7,
+    flexDirection: 'row',
+    paddingTop: 5,
+    justifyContent: 'center',
     boxShadow: "inset 0 0 5 1 #00000090, 2 2 5 0 #00000070",
   },
   btnSave: {
-    marginBottom: 20,
-    width: "90%",
-    textAlign: "center",
-    backgroundColor: "green",
+    width: 200,
+    margin: 'auto',
+    marginTop: 30,
     padding: 12,
+    backgroundColor: "#2ae412",
     borderRadius: 5,
-    // boxShadow: "3 3 5 1 #000000",
-    boxShadow: "inset 0 0 5 0 #00000080, 1 3 7 0 #00000090",
-  },
-  saveText: {
-    fontWeight: "bold",
-    fontSize: 20,
-    textAlign: "center",
-    color: "#FFFFFF",
-  },
+    alignItems: 'center',
+    boxShadow: " 1 3 7 0 #00000090",
+  }
 });

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Infantil Play Tube",
+    "name": "Infantil Play",
     "slug": "infantil-play-tube",
     "version": "1.0.0",
     "scheme": "infantil-play-tube",
@@ -9,17 +9,22 @@
       "android",
       "web"
     ],
-    "orientation": "portrait",
+    "orientation": "landscape",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "androidNavigationBar": {
+      "visible": "immersive",
+      "backgroundColor": "#000000"
+    },
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.robsonmagalhaes.infantilplaytube"
     },
     "android": {
       "adaptiveIcon": {

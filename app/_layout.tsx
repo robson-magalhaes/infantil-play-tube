@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import mobileAds, { MaxAdContentRating } from 'react-native-google-mobile-ads';
 import { ContextProvider } from '../context/MainContext';
 
+import { StatusBar } from 'expo-status-bar';
+import { ParentalProvider } from '../context/ParentalControlContext';
 export default function Layout() {
 
   useEffect(() => {
@@ -19,15 +21,17 @@ export default function Layout() {
     mobileAds()
       .initialize()
       .then((adapterStatuses: any) => {
-        console.log(adapterStatuses);
       });
   }, []);
 
   return (
     <ContextProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <ParentalProvider>
+        <StatusBar hidden={true} />
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </ParentalProvider>
     </ContextProvider>
   );
 }
