@@ -30,10 +30,10 @@ export default () => {
     }, [])
     return (
         <View style={styles.container}>
-            <Animated.Image style={[styles.nuvem, animatedStyle, { width:100, height:60,top: 10, right: 140, shadowOffset: { width: -2, height: 2 } }]}
+            <Animated.Image style={[styles.nuvem, animatedStyle, { width: 100, height: 60, top: 10, right: 140, shadowOffset: { width: -2, height: 2 } }]}
                 source={require('../assets/image/nuvem.png')} />
 
-            <Animated.Image style={[styles.nuvem, animatedStyle, { top: 10, right: 0,shadowOffset: { width: 2, height: 2 } }]}
+            <Animated.Image style={[styles.nuvem, animatedStyle, { top: 10, right: 0, shadowOffset: { width: 2, height: 2 } }]}
                 source={require('../assets/image/nuvem.png')} />
 
             <Animated.Image style={[styles.nuvem, animatedStyle, { top: 160, left: 70, shadowOffset: { width: -2, height: -1 } }]}
@@ -41,10 +41,10 @@ export default () => {
 
             <Animated.Image style={[styles.nuvem, animatedStyle, { bottom: 140, left: 250, shadowOffset: { width: -2, height: 2 } }]}
                 source={require('../assets/image/nuvem.png')} />
-                
-            <Animated.Image style={[styles.nuvem, animatedStyle, { width:80, height:50,top: 10, left: 150, shadowOffset: { width: -2, height: 2 } }]}
+
+            <Animated.Image style={[styles.nuvem, animatedStyle, { width: 80, height: 50, top: 10, left: 150, shadowOffset: { width: -2, height: 2 } }]}
                 source={require('../assets/image/nuvem.png')} />
-            <Animated.Image style={[styles.nuvem, animatedStyle, { width:80, height:50,bottom: 30, right: 60, shadowOffset: { width: -2, height: 2 } }]}
+            <Animated.Image style={[styles.nuvem, animatedStyle, { width: 80, height: 50, bottom: 30, right: 60, shadowOffset: { width: -2, height: 2 } }]}
                 source={require('../assets/image/nuvem.png')} />
 
 
@@ -71,7 +71,7 @@ export default () => {
                 start={[0.4, 0.1]}
                 end={[0.8, 0.9]}
                 locations={[0, 0.60, 0.60, 0.70, 0.80, 0.90, 0.95, 1]}
-                colors={['#4fc4d6', '#4fc4d6', '#df3131', '#ffff5e', '#4dc549', '#4f6ed6','#8c69c4', '#4fc4d6']}
+                colors={['#4fc4d6', '#4fc4d6', '#df3131', '#ffff5e', '#4dc549', '#4f6ed6', '#8c69c4', '#4fc4d6']}
                 style={styles.background}
             />
         </View>
@@ -80,28 +80,18 @@ export default () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex:1,
         width: '100%',
         height: "100%",
         position: "absolute",
-        top:0,
-        right:0,
+        top: 0,
+        left: 0,
         zIndex: -2,
-        backgroundColor:'white'
+        backgroundColor: 'transparent'
     },
     nuvem: {
         width: 150,
         height: 90,
         position: "absolute",
-        shadowOffset: { width: -2, height: -2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 3,
-        shadowColor: "#000",
-        ...Platform.select({
-            android: {
-                elevation: 10,
-            },
-        }),
         zIndex: -1
     },
     balao: {
@@ -115,6 +105,7 @@ const styles = StyleSheet.create({
         right: 0,
         top: 0,
         height: '100%',
-        zIndex: -2
+        zIndex: -2,
+        backgroundColor: 'transparent'
     }
 })

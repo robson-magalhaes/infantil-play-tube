@@ -15,6 +15,7 @@ export default ({ bannerId }: Props) => {
                 networkExtras: {
                     collapsible: 'bottom',
                 },
+                
             }}
         />
     )

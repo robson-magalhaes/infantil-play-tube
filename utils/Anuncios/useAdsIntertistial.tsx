@@ -2,17 +2,13 @@ import { useEffect, useState } from 'react';
 import { Platform, StatusBar } from 'react-native';
 import { InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
 
-const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-1411733442258523/9244511809';
-
-//const adUnitId = 'ca-app-pub-1411733442258523/9244511809';
-
-const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-    keywords: ['fashion', 'clothing'],
-});
-
-export default () => {
+const useAdsIntertistial = (adsId: string) => {
     const [loaded, setLoaded] = useState(false);
-
+    const [interstitial] = useState(() =>
+        InterstitialAd.createForAdRequest(__DEV__ ? TestIds.INTERSTITIAL : adsId, {
+            keywords: ['fashion', 'clothing']
+        })
+    );
     const handlePress = () => {
         if (loaded) {
             interstitial.show();
@@ -51,3 +47,5 @@ export default () => {
 
     return null;
 };
+
+export default useAdsIntertistial;

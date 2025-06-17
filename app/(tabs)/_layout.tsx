@@ -24,46 +24,42 @@ export default () => {
           height:35
         },
         }}>
+          
         <Tabs.Screen
           name="index"
           options={{
-            title: 'Início',
+            title: 'Animais',
             headerShown: false,
-            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="home" color={focused ? '#4fc4d6' : '#0652df'} />,
+            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="music" color={focused ? '#4fc4d6' : '#0652df'} />,
+          }}
+        />
+        <Tabs.Screen
+          name="listaVideos"
+          
+          options={{
+            title: 'Lista de videos',
+            headerShown: false,
+            // headerStyle:{backgroundColor:'blue'},
+            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="play" color={focused ? '#4fc4d6' : '#0652df'} />,
           }}
         />
         <Tabs.Screen
           name="FullScreenVideoScreen"
           options={{ 
-            title:'Play',
+            title:'Assitindo',
             headerShown: false,
-            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="play" color={focused ? '#4fc4d6' : '#5e7cff'} />
+            headerTransparent: true,
+            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="play-circle" color={focused ? '#4fc4d6' : '#5e7cff'} />
           }}
         />
         <Tabs.Screen
-          name="categorias"
-          options={{
-            title: 'Categorias',
-            headerShown: false,
-            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="home" color={focused ? '#4fc4d6' : '#b829f0'} />,
-          }}
-        />
-        <Tabs.Screen
-          name="parentalControl"
-          options={{
-            title: 'Bloquear/Desbloquear',
-            headerShown: false,
-            tabBarIcon: ({ focused }) => <FontAwesome size={28} name="cog" color={focused ? '#4fc4d6' : '#ffb95e'} />,
-          }}
-        /> 
-        {/* <Tabs.Screen
           name="settings"
           options={{
             title: 'Configurações',
             headerShown: false,
             tabBarIcon: ({ focused }) => <FontAwesome size={28} name="cog" color={focused ? '#4fc4d6' : '#ffb95e'} />,
           }}
-        /> */}
+        />
       </Tabs>
 
       {isButtonPressed ?

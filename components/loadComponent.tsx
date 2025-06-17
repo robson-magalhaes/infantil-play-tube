@@ -9,7 +9,6 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated';
 
-// Cria um componente animado baseado no View do React Native
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 export default function LoadComponent() {

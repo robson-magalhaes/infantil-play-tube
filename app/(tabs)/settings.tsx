@@ -1,26 +1,52 @@
 import { View, Text, StyleSheet, TextInput, Pressable, Button, FlatList, Dimensions, ScrollView } from 'react-native';
-import GAMBannerAdsComponent from '../../components/GAMBannerAdsComponent';
-import { useContext } from 'react';
+import GAMBannerAdsComponent from '../../utils/Anuncios/GAMBannerAdsComponent';
+import { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../context/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getVideosForCategory } from '../../services/fetchData';
-import useAdsIntertistial from '../../services/useAdsIntertistial';
+import useAdsIntertistial from '../../utils/Anuncios/useAdsIntertistial';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '../../types/RootStackParamList';
 import AnimatedAndHappy from '../../components/AnimatedAndHappy';
+import { ParentalContext } from '../../context/ParentalControlContext';
+import BannerCollapsible from '../../utils/Anuncios/BannerCollapsible';
 
 export default () => {
-  useAdsIntertistial();
+  //ANUNCIO
+  useAdsIntertistial('ca-app-pub-1411733442258523/1844435218');
+
   const Ctx = useContext(MainContext);
   const navigation = useNavigation<RootStackParamList>();
-  const handleUpdate = async () => {
+  const ParentalControl = useContext(ParentalContext);
+  const [textCurrent, setTextCurrent] = useState('');
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!initialized && ParentalControl?.passParental !== undefined) {
+      setTextCurrent(ParentalControl.passParental);
+      setInitialized(true);
+    }
+  }, [ParentalControl?.passParental, initialized]);
+
+  const handleUpdateParental = async () => {
+    try {
+      ParentalControl?.setPassParental(textCurrent);
+      await AsyncStorage.setItem("parentalPass", textCurrent)
+      alert('SENHA ALTERADA COM SUCESSO!!');
+      navigation.navigate('index');
+    } catch (error) {
+      alert('ERRO AO SALVAR SENHA!');
+    }
+  };
+
+  const handleUpdateCategory = async () => {
     try {
       if (Ctx?.data) {
         await AsyncStorage.removeItem('my-key');
         await AsyncStorage.removeItem('my-category');
 
-        alert('Dados atualizados com sucesso!');
+        alert('CATEGORIAS ATUALIZADAS COM SUCESSO!!');
         getVideosForCategory(Ctx.data).then((videos) => {
           Ctx.setVideos(videos);
           navigation.navigate('index');
@@ -28,7 +54,7 @@ export default () => {
       }
     } catch (error) {
       console.error("Erro ao salvar dados no AsyncStorage:", error);
-      alert('Erro ao salvar dados!');
+      alert('ERRO AO SALVAR CATEGORIA!');
     }
   };
 
@@ -62,12 +88,13 @@ export default () => {
       Ctx?.setData(newData);
     }
   }
+
   return (
-    <ScrollView contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}>
+    <ScrollView contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', paddingBottom:50 }}>
       <AnimatedAndHappy />
-      
+
       {/* ANUNCIO AQUI*/}
-      <GAMBannerAdsComponent bannerId='ca-app-pub-1411733442258523/8794582523' />
+        <GAMBannerAdsComponent bannerId='ca-app-pub-1411733442258523/7704693606' />
 
       <View style={styles.container}>
         <Text style={styles.title}>Categorias</Text>
@@ -90,13 +117,41 @@ export default () => {
             </View>
           ))}
           <Text style={{ fontWeight: 'bold', textAlign: 'right', marginRight: 50 }}>Máximo de categorias: {Ctx?.data.length} / 5</Text>
-          <Pressable style={[styles.btnSave, { backgroundColor: '#1290e4' }]} onPress={setCategory}>
-            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>ADICIONAR</Text>
+          <View style={{ flexDirection: 'row', justifyContent: "space-between", paddingHorizontal: 20 }}>
+            <Pressable style={[styles.btnSave, { backgroundColor: '#1290e4', width: 100, padding: 0 }]} onPress={setCategory}>
+              <Text style={[styles.TxtBtnSave, { fontSize: 40 }]}>+</Text>
+            </Pressable>
+            <Pressable style={[styles.btnSave, {}]} onPress={handleUpdateCategory}>
+              <Text style={[styles.TxtBtnSave, {}]}>SALVAR</Text>
+            </Pressable>
+          </View>
+        </View>
+      </View>
+      <View style={styles.container}>
+        <Text style={styles.title}>CONTROLE DOS PAIS</Text>
+        <Text style={styles.simpleText}>
+          Bloqueio de toque.
+        </Text>
+        <View style={styles.cardSession}>
+          <View style={[styles.InputItems, { flexDirection: 'row' }]}>
+            <Text style={[styles.simpleText, { marginVertical: 'auto' }]}>Senha:</Text>
+            <TextInput
+              keyboardType='number-pad'
+              style={[styles.input, { width: 300, marginLeft: 10 }]}
+              value={textCurrent}
+              placeholder='Digite aqui a senha...'
+              onChangeText={(newText) => setTextCurrent(newText)}
+            />
+          </View>
+          <Pressable style={styles.btnSave} onPress={handleUpdateParental}>
+            <Text style={[styles.TxtBtnSave, {}]}>SALVAR</Text>
           </Pressable>
         </View>
-        <Pressable style={styles.btnSave} onPress={handleUpdate}>
-          <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>SALVAR</Text>
-        </Pressable>
+
+      </View>
+      {/* ANUNCIO AQUI*/}
+      <View style={styles.boxBanner}>
+        <BannerCollapsible  bannerId={'ca-app-pub-1411733442258523/9903405555'} />
       </View>
     </ScrollView>
   );
@@ -158,7 +213,6 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    height: 50,
     paddingLeft: 15,
     borderRadius: 7,
     borderColor: '#2196F3',
@@ -181,12 +235,31 @@ const styles = StyleSheet.create({
   },
   btnSave: {
     width: 200,
-    margin: 'auto',
+    height: 50,
     marginTop: 30,
-    padding: 12,
+    marginHorizontal: "auto",
+    padding: 10,
     backgroundColor: "#2ae412",
     borderRadius: 5,
     alignItems: 'center',
     boxShadow: " 1 3 7 0 #00000090",
-  }
+  },
+  TxtBtnSave: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20,
+    margin: 'auto',
+    textAlign: 'center',
+    verticalAlign: "middle"
+  },
+  boxBanner: {
+    backgroundColor: "white",
+    width: "100%",
+    borderColor: "transparent",
+    borderWidth: 1,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
 });

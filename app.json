@@ -1,9 +1,9 @@
 {
   "expo": {
     "name": "Infantil Play",
-    "slug": "infantil-play-tube",
+    "slug": "infantil-play",
     "version": "1.0.0",
-    "scheme": "infantil-play-tube",
+    "scheme": "infantil-play",
     "platforms": [
       "ios",
       "android",
@@ -24,14 +24,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.robsonmagalhaes.infantilplaytube"
+      "bundleIdentifier": "com.robsonmagalhaes.infantilplay"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.robsonmagalhaes.infantilplaytube"
+      "package": "com.robsonmagalhaes.infantilplay"
     },
     "web": {
       "favicon": "./assets/favicon.png",
