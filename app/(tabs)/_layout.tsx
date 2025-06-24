@@ -26,7 +26,7 @@ export default () => {
         }}>
           
         <Tabs.Screen
-          name="index"
+          name="somAnimais"
           options={{
             title: 'Animais',
             headerShown: false,
@@ -34,12 +34,10 @@ export default () => {
           }}
         />
         <Tabs.Screen
-          name="listaVideos"
-          
+          name="index"
           options={{
             title: 'Lista de videos',
             headerShown: false,
-            // headerStyle:{backgroundColor:'blue'},
             tabBarIcon: ({ focused }) => <FontAwesome size={28} name="play" color={focused ? '#4fc4d6' : '#0652df'} />,
           }}
         />

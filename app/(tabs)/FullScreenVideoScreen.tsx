@@ -5,16 +5,15 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import AnimatedAndHappy from '../../components/AnimatedAndHappy';
 
 export default function FullScreenVideoScreen() {
-    const route = useRoute();
+    const route = useRoute() as any;
     const { 
         videoId = 'p-_9yyQZvLo', 
         videos = [],
         currentIndex = 0 
-    } = route.params || {};
+    }:any = route.params || {};
     const navigation = useNavigation();
     const [currentVideoIndex, setCurrentVideoIndex] = useState(currentIndex);
 
-// Atualiza o índice sempre que mudar o parâmetro da rota
 useEffect(() => {
     const newIndex = route.params?.currentIndex ?? 0;
     setCurrentVideoIndex(newIndex);
@@ -24,7 +23,7 @@ useEffect(() => {
 
     const handleNextVideo = () => {
         if (videos.length === 0) {
-            navigation.goBack(); // Se não houver vídeos, volta
+            navigation.goBack();
             return;
         }
 

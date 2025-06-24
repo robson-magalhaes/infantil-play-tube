@@ -3,7 +3,6 @@ import { Platform, StatusBar } from 'react-native';
 import { AdEventType, TestIds, AppOpenAd } from 'react-native-google-mobile-ads';
 
 const adUnitId = __DEV__ ? TestIds.APP_OPEN : 'ca-app-pub-1411733442258523/5148418343';
-//const adUnitId = 'ca-app-pub-1411733442258523/5148418343';
 
 const appOpenAd = AppOpenAd.createForAdRequest(adUnitId, {
     keywords: ['fashion', 'clothing'],

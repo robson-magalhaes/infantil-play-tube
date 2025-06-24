@@ -1,114 +1,199 @@
-import { View, StyleSheet, Image, TouchableOpacity, FlatList, Text, Platform, Pressable } from 'react-native';
+import { useContext, useEffect, useState } from 'react';
+import { View, FlatList, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import { getVideosForCategory } from '../../services/fetchData';
+import * as Font from 'expo-font';
+import { RubikVinyl_400Regular } from '@expo-google-fonts/rubik-vinyl';
+import { ButterflyKids_400Regular } from '@expo-google-fonts/butterfly-kids';
 import BannerCollapsible from '../../utils/Anuncios/BannerCollapsible';
+import { MainContext } from '../../context/MainContext';
 import AnimatedAndHappy from '../../components/AnimatedAndHappy';
 import useOpenAds from '../../utils/Anuncios/useOpenAds';
-import { useEffect, useState } from 'react';
-import { Audio } from 'expo-av';
-import { animaisNat } from '../../data/animais';
-import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
-import ButtonSom from '../../components/ButtonSom';
+import { useNavigation } from 'expo-router';
+import { RootStackParamList } from '../../types/RootStackParamList';
+import { CategoryType } from '../../types/CategoryType';
+import LoadComponent from '../../components/loadComponent';
+import VideoScreen from '../../components/videoScreen';
 
 export default () => {
     useOpenAds();
-    const [sound, setSound] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
+    const [currentModalVideo, setCurrentModalVideo] = useState(false);
+    const [ dataCurrent, setDataCurrent] = useState({});
+    const navigation = useNavigation<RootStackParamList>();
+    const [videosForCategory, setVideosForCategory] = useState<DataType[] | any>([]);
+    const Ctx = useContext(MainContext);
+    const [selectVideoId, setSelectVideoId] = useState();
+    const [selectVideoList, setSelectVideoList] = useState();
+    const [selectCurrent, setSelectCurrent] = useState();
 
-    async function playSound(animal:any) {
-        triggerAnimation();
-        const { sound }: any = await Audio.Sound.createAsync(animal);
-        setSound(sound);
-
-        console.log('Playing Sound');
-        await sound.playAsync();
-    }
-
-    useEffect(() => {
-        return sound
-            ? () => {
-                console.log('Unloading Sound');
-                sound.unloadAsync();
-            }
-            : undefined;
-    }, [sound]);
-
-    const scale = useSharedValue(1);
-
-    const animatedStyle = useAnimatedStyle(() => {
-        return {
-            transform: [{ scale: scale.value }],
-        };
+    Font.useFonts({
+        RubikVinyl_400Regular,
+        ButterflyKids_400Regular
     });
 
-    const triggerAnimation = () => {
-        scale.value = withTiming(0.9, { duration: 100 }, () => {
-            scale.value = withTiming(1, { duration: 100 });
+    useEffect(() => {
+        if (Ctx?.data)
+            getVideosForCategory(Ctx?.data).then(x => {
+                setVideosForCategory(x);
+                setLoading(true);
+            });
+    }, [Ctx?.videos])
+
+    const handleNavigateToFullScreen = (videoItem: DataType) => {
+        const categoryWithVideo = videosForCategory.find((category: any) =>
+            category.data.some((v: CategoryType) => v.id === videoItem.id)
+        );
+        const videoList = categoryWithVideo?.data || [];
+        const currentIndex = videoList.findIndex((v: any) => v.id === videoItem.id);
+
+        // setSelectVideoId(videoItem.id);
+        // setSelectVideoList(videoList);
+        // setSelectCurrent(currentIndex >= 0 ? currentIndex : 0);
+        // setDataCurrent({videoId:videoItem.id, currentIndex:current, videos:videoList});
+
+        navigation.navigate('FullScreenVideoScreen', {
+            videoId: videoItem.id,
+            videos: videoList,
+            currentIndex: currentIndex >= 0 ? currentIndex : 0
         });
+
     };
 
     return (
-        <View style={styles.container}>
+        <View style={{ flex: 1 }}>
             <AnimatedAndHappy />
-            <View style={styles.bodyGrid}>
-                <Text style={[styles.titleVideo, {
-                    fontFamily: 'RubikVinyl_400Regular'
-                }]}
-                >Som dos Animais</Text>
-                <FlatList
-                    data={animaisNat}
-                    keyExtractor={(_, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <ButtonSom
-                            img={item.img}
-                            onPress={() => playSound(item.som)}
+            {/* {dataCurrent && <VideoScreen videoId={selectVideoId} currentIndex={0} videos={dataCurrent.videoList}/>} */}
+            <View>
+                {!loading ?
+                    <LoadComponent />
+                    :
+                    <>
+                        <FlatList
+                            data={videosForCategory}
+                            keyExtractor={(item) => item.nameCategory}
+                            renderItem={({ item }) => (
+                                <View style={[styles.bodyVideoContainer, {}]}>
+                                    <Text style={[styles.titleVideo, {
+                                        fontFamily: 'RubikVinyl_400Regular'
+                                    }]}
+                                    >
+                                        {item.nameCategory}
+                                    </Text>
+                                    <FlatList
+                                        data={item.data}
+                                        horizontal={true}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        renderItem={({ item }) => (
+                                            <View style={styles.videoItem}>
+                                                <View style={styles.embeddedVideoContainer}>
+                                                    <TouchableOpacity
+                                                        onPress={() => handleNavigateToFullScreen(item)}
+                                                        style={{ width: "100%", height: "100%" }}
+                                                        activeOpacity={0.7}
+                                                    >
+                                                        <Image
+                                                            source={{ uri: item.thumbnailUrl }}
+                                                            style={{
+                                                                width: "100%",
+                                                                height: "100%",
+                                                                borderTopLeftRadius: 10, borderTopRightRadius: 10
+                                                            }} />
+                                                        <Text style={styles.videoText}>{item.title}</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        )}
+                                    />
+                                </View>
+                            )
+                            }
+                            ListFooterComponent={
+                                <Text
+                                    style={{
+                                        textAlign: "center",
+                                        backgroundColor: "#FFFE5E80",
+                                        margin: 20,
+                                        borderRadius: 10,
+                                        fontSize: 20,
+                                        fontWeight: "bold",
+                                        padding: 10,
+                                        marginBottom: 100
+                                    }}
+                                >
+                                    Para adicionar uma nova categoria, vá para o menu de configurações
+                                </Text>
+                            }
                         />
-                    )}
-                    numColumns={4}
-                    contentContainerStyle={styles.gridContainer}
-                />
+
+                        {/* ANUNCIO AQUI*/}
+                        <View style={styles.boxBanner}>
+                            <BannerCollapsible bannerId={'ca-app-pub-1411733442258523/9903405555'} />
+                        </View>
+                    </>
+
+                }
 
             </View>
-            {/* <View style={styles.boxBanner}>
-                <BannerCollapsible bannerId={'ca-app-pub-1411733442258523/9903405555'} />
-            </View> */}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1
+    },
+    bodyVideoContainer: {
         flex: 1,
-        width: "100%",
+        marginBottom: 20,
+        alignItems: "flex-start"
     },
     titleVideo: {
         alignItems: 'flex-start',
-        textAlign: "center",
+        textAlign: "left",
         fontSize: 40,
         color: '#fff',
         textShadowColor: 'blue',
         textShadowOffset: { width: 3, height: 3 },
         textShadowRadius: 5,
-        marginTop: 25,
+        marginTop: 30,
+        marginLeft: 17,
         width: "100%"
-    },
-    bodyGrid: {
-        width: "100%",
-        flexDirection: 'column',
-        marginHorizontal: 'auto',
-        height: "100%",
-        // paddingBottom:53
-    },
-
-    gridContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     boxBanner: {
         backgroundColor: "#FFFFFF",
-        width: '100%',
+        width: "100%",
         borderColor: "transparent",
         borderWidth: 1,
         position: "absolute",
         bottom: 0,
-        right: 0,
         left: 0,
+        right: 0
+    },
+    videoItem: {
+        boxShadow: "2 2 1 4 #ffff5e, 4 6 1 8 #f259bc, 6 8 1 12 #4fc4d6, 10 15 10 5 #000000",
+        width: 320,
+        minHeight: 300,
+        margin: 30,
+        marginLeft: 15,
+        padding: 5,
+        borderRadius: 10,
+    },
+    videoText: {
+        height: 110,
+        fontSize: 19,
+        fontWeight: "bold",
+        padding: 13,
+        backgroundColor: "#FFFFFF60",
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10
+    },
+    embeddedVideoContainer: {
+        height: 170,
+        width: '100%'
+    },
+    embeddedVideoPlayer: {
+        width: '100%',
+        height: '100%',
     }
 });
