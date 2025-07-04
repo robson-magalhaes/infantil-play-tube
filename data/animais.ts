@@ -13,4 +13,7 @@ export const animaisNat = [
   { img: require("../assets/image/ovelha.png"), som: require("../assets/audio/ovelha.mp3")},
   { img: require("../assets/image/pato.png"), som: require("../assets/audio/pato.mp3")},
   { img: require("../assets/image/porco.png"), som: require("../assets/audio/porco.mp3")},
+  { img: require("../assets/image/grilo.png"), som: require("../assets/audio/grilo.mp3")},
+  { img: require("../assets/image/lobo.png"), som: require("../assets/audio/lobo.mp3")},
+  { img: require("../assets/image/sapo.png"), som: require("../assets/audio/sapo.mp3")},
 ];

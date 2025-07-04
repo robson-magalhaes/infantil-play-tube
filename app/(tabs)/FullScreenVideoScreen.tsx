@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { View, StyleSheet, Dimensions, Pressable, Text } from 'react-native';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AnimatedAndHappy from '../../components/AnimatedAndHappy';
+import ModalComponent from '../../components/ModalComponent';
+import { FontAwesome } from '@expo/vector-icons';
+import BannerQuadrado from '../../utils/Anuncios/BannerFull';
 
 export default function FullScreenVideoScreen() {
     const route = useRoute() as any;
@@ -13,7 +16,21 @@ export default function FullScreenVideoScreen() {
     }:any = route.params || {};
     const navigation = useNavigation();
     const [currentVideoIndex, setCurrentVideoIndex] = useState(currentIndex);
+    const [loadModal, setLoadModal] = useState<boolean>(false);
+    const [isButtonPressed, setIsButtonPressed] = useState(false);
 
+ useLayoutEffect(() => {
+        navigation.setOptions({
+            tabBarStyle: {
+                display: isButtonPressed ? 'none' : 'flex',
+                height: 35,
+            },
+        });
+    }, [isButtonPressed]);
+
+      const handleBlockView = () => {
+        isButtonPressed ? setLoadModal(!loadModal) : setIsButtonPressed(!isButtonPressed);
+      }
 useEffect(() => {
     const newIndex = route.params?.currentIndex ?? 0;
     setCurrentVideoIndex(newIndex);
@@ -38,20 +55,16 @@ useEffect(() => {
     const currentVideoId = videos[currentVideoIndex]?.id || videoId;
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1}}>
             <AnimatedAndHappy />
+            {loadModal && <ModalComponent load={loadModal} setLoad={setLoadModal} setBlockView={setIsButtonPressed} />}
             <View style={styles.container}>
                 <YoutubePlayer
                     height={Dimensions.get('window').height}
-                    width={Dimensions.get('window').width - 210}
+                    width={(Dimensions.get('window').height) * (16 / 9)}
                     play={true}
                     webViewStyle={{
                         backgroundColor: '#transparent',
-                        width: '100%',
-                        height: '100%',
-                        justifyContent: "center",
-                        alignContent: "center",
-                        marginTop:20
                     }}
                     videoId={currentVideoId}
                     initialPlayerParams={{
@@ -66,6 +79,20 @@ useEffect(() => {
                     }}
                 />
             </View>
+            {isButtonPressed ?
+        <Pressable style={styles.btnBlock}
+          onPress={handleBlockView}>
+          <Text><FontAwesome size={28} name="lock" /></Text>
+        </Pressable>
+        :
+        <Pressable style={styles.btnBlock}
+          onPress={handleBlockView}>
+          {<Text><FontAwesome size={28} name="unlock" /></Text>}
+        </Pressable>
+      }
+      {isButtonPressed &&
+        <View style={styles.viewBlock}></View>
+      }
         </View>
     );
 }
@@ -73,10 +100,31 @@ useEffect(() => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'transparent',
         justifyContent: 'center',
-        alignContent: "center",
-        margin: 'auto',
-                        
+        alignItems: 'center'
+    },
+    viewBlock: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        height: '100%',
+        borderBlockColor: 'blue',
+        borderWidth: 2
+    },
+    btnBlock: {
+        position: "absolute",
+        top: 15,
+        right: 17,
+        width: 45,
+        height: 45,
+        backgroundColor: '#fff',
+        boxShadow: "inset -1 -1 2 2 #00000080, 1 1 1 1 #00000080",
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        zIndex: 999
     },
 });

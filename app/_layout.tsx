@@ -9,14 +9,12 @@ import { ParentalProvider } from '../context/ParentalControlContext';
 export default function Layout() {
 
   useEffect(() => {
-    mobileAds()
-      .setRequestConfiguration({
-        maxAdContentRating: MaxAdContentRating.PG,
-        tagForChildDirectedTreatment: true,
-        tagForUnderAgeOfConsent: true,
-        testDeviceIdentifiers: ['EMULATOR'],
-      }).then(() => {
-      });
+    mobileAds().setRequestConfiguration({
+      maxAdContentRating: MaxAdContentRating.G,
+      tagForChildDirectedTreatment: true,
+      tagForUnderAgeOfConsent: true,
+      testDeviceIdentifiers: ['EMULATOR'],
+    })
 
     mobileAds()
       .initialize()

@@ -1,5 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Pressable, Button, FlatList, Dimensions, ScrollView } from 'react-native';
-import GAMBannerAdsComponent from '../../utils/Anuncios/GAMBannerAdsComponent';
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView } from 'react-native';
 import { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../context/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,7 +9,8 @@ import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '../../types/RootStackParamList';
 import AnimatedAndHappy from '../../components/AnimatedAndHappy';
 import { ParentalContext } from '../../context/ParentalControlContext';
-import BannerCollapsible from '../../utils/Anuncios/BannerCollapsible';
+import GAMBannerInlineAdaptive from '../../utils/Anuncios/GAMBannerInlineAdaptive';
+import BannerInlineAdaptive from '../../utils/Anuncios/BannerInlineAdaptive';
 
 export default () => {
   //ANUNCIO
@@ -90,11 +90,12 @@ export default () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', paddingBottom:50 }}>
+    <ScrollView contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 50 }}>
       <AnimatedAndHappy />
 
       {/* ANUNCIO AQUI*/}
-        <GAMBannerAdsComponent bannerId='ca-app-pub-1411733442258523/7704693606' />
+      <BannerInlineAdaptive bannerId='ca-app-pub-1411733442258523/7704693606' />
+
 
       <View style={styles.container}>
         <Text style={styles.title}>Categorias</Text>
@@ -133,11 +134,11 @@ export default () => {
           Bloqueio de toque.
         </Text>
         <View style={styles.cardSession}>
-          <View style={[styles.InputItems, { flexDirection: 'row' }]}>
-            <Text style={[styles.simpleText, { marginVertical: 'auto' }]}>Senha:</Text>
+          <View style={[styles.InputItems, { flexDirection: "column" }]}>
+            <Text style={[styles.simpleText, { textAlign: "left" }]}>Senha:</Text>
             <TextInput
               keyboardType='number-pad'
-              style={[styles.input, { width: 300, marginLeft: 10 }]}
+              style={[styles.input, {}]}
               value={textCurrent}
               placeholder='Digite aqui a senha...'
               onChangeText={(newText) => setTextCurrent(newText)}
@@ -149,9 +150,8 @@ export default () => {
         </View>
 
       </View>
-      {/* ANUNCIO AQUI*/}
       <View style={styles.boxBanner}>
-        <BannerCollapsible  bannerId={'ca-app-pub-1411733442258523/9903405555'} />
+        <GAMBannerInlineAdaptive bannerId={'ca-app-pub-1411733442258523/9903405555'} />
       </View>
     </ScrollView>
   );
@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
+    height: 50,
     paddingLeft: 15,
     borderRadius: 7,
     borderColor: '#2196F3',

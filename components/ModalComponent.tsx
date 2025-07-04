@@ -77,8 +77,8 @@ const styles = StyleSheet.create({
   bodyModal: {
     padding:30,
     margin:'auto',
-    width: '70%',
-    height: '70%',
+    width: '60%',
+    height: '60%',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#fff',

@@ -4,7 +4,6 @@ import { getVideosForCategory } from '../../services/fetchData';
 import * as Font from 'expo-font';
 import { RubikVinyl_400Regular } from '@expo-google-fonts/rubik-vinyl';
 import { ButterflyKids_400Regular } from '@expo-google-fonts/butterfly-kids';
-import BannerCollapsible from '../../utils/Anuncios/BannerCollapsible';
 import { MainContext } from '../../context/MainContext';
 import AnimatedAndHappy from '../../components/AnimatedAndHappy';
 import useOpenAds from '../../utils/Anuncios/useOpenAds';
@@ -12,19 +11,28 @@ import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '../../types/RootStackParamList';
 import { CategoryType } from '../../types/CategoryType';
 import LoadComponent from '../../components/loadComponent';
-import VideoScreen from '../../components/videoScreen';
+import BannerFixed from '../../utils/Anuncios/BannerFixed';
+import GAMBannerInlineAdaptive from '../../utils/Anuncios/GAMBannerInlineAdaptive';
 
 export default () => {
     useOpenAds();
     const [loading, setLoading] = useState(false);
-    const [currentModalVideo, setCurrentModalVideo] = useState(false);
-    const [ dataCurrent, setDataCurrent] = useState({});
     const navigation = useNavigation<RootStackParamList>();
     const [videosForCategory, setVideosForCategory] = useState<DataType[] | any>([]);
     const Ctx = useContext(MainContext);
-    const [selectVideoId, setSelectVideoId] = useState();
-    const [selectVideoList, setSelectVideoList] = useState();
-    const [selectCurrent, setSelectCurrent] = useState();
+    const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+    const bannerIds = [
+        'ca-app-pub-1411733442258523/9903405555',
+        'ca-app-pub-1411733442258523/7704693606'
+    ];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentBannerIndex((prev) => (prev + 1) % bannerIds.length);
+        }, 30000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     Font.useFonts({
         RubikVinyl_400Regular,
@@ -46,11 +54,6 @@ export default () => {
         const videoList = categoryWithVideo?.data || [];
         const currentIndex = videoList.findIndex((v: any) => v.id === videoItem.id);
 
-        // setSelectVideoId(videoItem.id);
-        // setSelectVideoList(videoList);
-        // setSelectCurrent(currentIndex >= 0 ? currentIndex : 0);
-        // setDataCurrent({videoId:videoItem.id, currentIndex:current, videos:videoList});
-
         navigation.navigate('FullScreenVideoScreen', {
             videoId: videoItem.id,
             videos: videoList,
@@ -62,7 +65,6 @@ export default () => {
     return (
         <View style={{ flex: 1 }}>
             <AnimatedAndHappy />
-            {/* {dataCurrent && <VideoScreen videoId={selectVideoId} currentIndex={0} videos={dataCurrent.videoList}/>} */}
             <View>
                 {!loading ?
                     <LoadComponent />
@@ -71,7 +73,8 @@ export default () => {
                         <FlatList
                             data={videosForCategory}
                             keyExtractor={(item) => item.nameCategory}
-                            renderItem={({ item }) => (
+                            decelerationRate={0}
+                            renderItem={({ item, index }) => (
                                 <View style={[styles.bodyVideoContainer, {}]}>
                                     <Text style={[styles.titleVideo, {
                                         fontFamily: 'RubikVinyl_400Regular'
@@ -82,6 +85,7 @@ export default () => {
                                     <FlatList
                                         data={item.data}
                                         horizontal={true}
+                                        decelerationRate={0}
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item) => item.id}
                                         renderItem={({ item }) => (
@@ -105,6 +109,11 @@ export default () => {
                                             </View>
                                         )}
                                     />
+                                    {index % 2 == 0 &&
+                                    <View style={{width:"100%", alignItems: 'center', marginVertical: 25 }}>
+                                        <GAMBannerInlineAdaptive bannerId={bannerIds[currentBannerIndex]} />
+                                    </View>
+                                    }
                                 </View>
                             )
                             }
@@ -128,7 +137,7 @@ export default () => {
 
                         {/* ANUNCIO AQUI*/}
                         <View style={styles.boxBanner}>
-                            <BannerCollapsible bannerId={'ca-app-pub-1411733442258523/9903405555'} />
+                            <BannerFixed bannerId={'ca-app-pub-1411733442258523/9903405555'} />
                         </View>
                     </>
 

@@ -6,7 +6,7 @@ const useAdsIntertistial = (adsId: string) => {
     const [loaded, setLoaded] = useState(false);
     const [interstitial] = useState(() =>
         InterstitialAd.createForAdRequest(__DEV__ ? TestIds.INTERSTITIAL : adsId, {
-            keywords: ['fashion', 'clothing']
+            requestNonPersonalizedAdsOnly: true
         })
     );
     const handlePress = () => {

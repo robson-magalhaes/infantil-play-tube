@@ -1,4 +1,5 @@
 {
     "editor.cursorSurroundingLines": 0,
-    "editor.cursorWidth": 0
+    "editor.cursorWidth": 0,
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

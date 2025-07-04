@@ -6,5 +6,12 @@ type Props = {
 }
 export default ({ bannerId }: Props) => {
     const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : bannerId;
-    return <GAMBannerAd unitId={adUnitId} sizes={[BannerAdSize.FULL_BANNER]} />
+    
+    return <GAMBannerAd
+        unitId={adUnitId}
+        sizes={[BannerAdSize.INLINE_ADAPTIVE_BANNER]}
+        requestOptions={{
+            requestNonPersonalizedAdsOnly: true
+        }}
+    />
 }
